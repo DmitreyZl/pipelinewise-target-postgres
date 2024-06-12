@@ -496,7 +496,7 @@ class DbSync:
 
     def truncate_table(self, stream):
         table = self.table_name(stream)
-        query = "TRUNCATE FROM {}".format(table)
+        query = "TRUNCATE TABLE {}".format(table)
         self.logger.info("truncate rows from '%s' table... %s", table, query)
         self.logger.info("DELETE %s", len(self.query(query)))
         
