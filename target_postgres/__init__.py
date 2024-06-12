@@ -291,6 +291,7 @@ def flush_streams(
             row_count=row_count,
             db_sync=stream_to_sync[stream],
             delete_rows=config.get('hard_delete'),
+            truncate=config.get('truncate'),
             temp_dir=config.get('temp_dir')
         ) for stream in streams_to_flush)
 
@@ -317,7 +318,7 @@ def flush_streams(
 
 
 # pylint: disable=too-many-arguments
-def load_stream_batch(stream, records_to_load, row_count, db_sync, delete_rows=False, temp_dir=None):
+def load_stream_batch(stream, records_to_load, row_count, db_sync, delete_rows=False, truncate=False, temp_dir=None):
     """Load a batch of records and do post load operations, like creating
     or deleting rows"""
     # Load into Postgres
@@ -330,6 +331,10 @@ def load_stream_batch(stream, records_to_load, row_count, db_sync, delete_rows=F
     # Delete soft-deleted, flagged rows - where _sdc_deleted at is not null
     if delete_rows:
         db_sync.delete_rows(stream)
+
+    # truncate
+    if truncate:
+        db_sync.truncate_table(stream)
 
     # reset row count for the current stream
     row_count[stream] = 0
