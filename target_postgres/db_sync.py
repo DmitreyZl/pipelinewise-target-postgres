@@ -494,6 +494,12 @@ class DbSync:
         self.logger.info("Deleting rows from '%s' table... %s", table, query)
         self.logger.info("DELETE %s", len(self.query(query)))
 
+    def truncate_table(self, stream):
+        table = self.table_name(stream)
+        query = "TRUNCATE FROM {}".format(table)
+        self.logger.info("truncate rows from '%s' table... %s", table, query)
+        self.logger.info("DELETE %s", len(self.query(query)))
+        
     def create_schema_if_not_exists(self, table_columns_cache=None):
         schema_name = self.schema_name
         schema_rows = 0
